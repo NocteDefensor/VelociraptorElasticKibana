@@ -1,0 +1,67 @@
+version: '3.7'
+
+networks:
+  frontend:
+    external: true
+  backend:
+services:
+  velociraptor:
+    container_name: velociraptor
+    #image: wlambert/velociraptor
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./velociraptor:/velociraptor/:rw
+    environment:
+      - VELOX_USER=${VELOX_USER}
+      - VELOX_PASSWORD=${VELOX_PASSWORD}
+      - VELOX_ROLE=${VELOX_ROLE}
+      - VELOX_SERVER_URL=${VELOX_SERVER_URL}
+      - VELOX_FRONTEND_HOSTNAME=${VELOX_FRONTEND_HOSTNAME}
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8889:8889"
+    restart: unless-stopped
+    networks:
+      - backend
+      - frontend
+  elasticsearch:
+    image: 'docker.elastic.co/elasticsearch/elasticsearch:7.11.1'
+    container_name: elasticsearch
+    restart: unless-stopped
+    ports:
+      - '0.0.0.0:9200:9200'
+    environment:
+      - http.host=0.0.0.0
+      - discovery.type=single-node
+      - cluster.name=velociraptor
+      - script.allowed_types= inline
+      - thread_pool.search.queue_size=100000
+      - thread_pool.write.queue_size=10000
+      - gateway.recover_after_nodes=1
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms256m -Xmx256m'
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./vol/elasticsearch_data:/usr/share/elasticsearch/data
+      - ./vol/elasticsearch_logs:/usr/share/elasticsearch/logs
+    networks:
+      - backend
+
+  kibana:
+    image: 'docker.elastic.co/kibana/kibana:7.11.1'
+    container_name: kibana
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+    ports:
+      - '5601:5601'
+    networks:
+      - frontend
+      - backend
