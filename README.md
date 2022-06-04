@@ -1,6 +1,6 @@
 # velociraptor-docker
 Run [Velocidex Velociraptor](https://github.com/Velocidex/velociraptor) server with Docker
-- This Project is forked from Wes Lambert's Velociraptor Docker project. 
+- This Project is forked from Wes Lambert's Velociraptor Docker project.  It adds Elasticsearch and Kibana to allow indexing and search for those artifacts found with velociraptor. 
 - This will install Elasticsearch, kibana and velociraptor.
 
 #### Install
