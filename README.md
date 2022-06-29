@@ -6,7 +6,7 @@ Run [Velocidex Velociraptor](https://github.com/Velocidex/velociraptor) server w
 #### Install
 
 - Ensure [docker-compose](https://docs.docker.com/compose/install/) is installed on the host
-- `git clone https://Mastadamus@dev.azure.com/Mastadamus/Velociraptor-ElasticSearch-Kibana/_git/Velociraptor-ElasticSearch-Kibana`
+- `git clone https://github.com/NocteDefensor/VelociraptorElasticKibana.git`
 - `cd ./Velociraptor-ElasticSearch-Kibana`
 - Change credential values in `.env` as desired
 - to run detached enter `docker-compose up -d` or if your prefer to watch the containers come up `docker-compose up`
